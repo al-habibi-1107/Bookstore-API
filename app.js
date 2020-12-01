@@ -52,8 +52,48 @@ app.route("/books")
         }
     });
   
+})
+.delete(function(req,res){
+
+    Books.deleteMany({},function(err){
+        if(!err){
+            res.send("Successfully Deleted all");
+        }else{
+            res.send("Sorry Couldnt delete");
+        }
+    });
 });
 
+//////////////////////////////// For A Single Book Entry ///////////////////////////////
+
+app.route('/books/:newBook')
+.get(function(req,res){
+    var book = req.params.newBook;
+
+    Books.findOne({title: book },function(err,foundBook){
+        if(foundBook){
+            res.send(foundBook);
+        }else{
+            res.send("No Book data found");
+        }
+    });
+})
+.put(function(req,res){
+    Books.update({
+        title: req.params.newBook
+    },{
+        _id: req.body.id,
+        title: req.body.title,
+        description: req.body.description,
+        author: req.body.author
+    },function(err){
+        if(!err){
+            res.send("Entry Successfully Updated");
+        }else{
+            res.send("Updating error");
+        }
+    })
+});
 
 
 app.listen("3000",function(){
